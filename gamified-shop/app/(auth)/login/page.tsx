@@ -2,35 +2,19 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import Link from "next/link";
 
-export default function RegisterPage() {
+export default function LoginPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900">
-            ایجاد حساب کاربری
+            ورود به حساب کاربری
           </h1>
           <p className="mt-2 text-sm text-gray-600">
-            به فروشگاه ما بپیوندید و از مزایای گیمیفیکیشن لذت ببرید!
+            خوش آمدید! برای ادامه وارد شوید.
           </p>
         </div>
         <form className="space-y-6">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700 text-right"
-            >
-              نام
-            </label>
-            <Input
-              id="name"
-              name="name"
-              type="text"
-              required
-              className="mt-1"
-              placeholder="نام خود را وارد کنید"
-            />
-          </div>
           <div>
             <label
               htmlFor="email"
@@ -59,37 +43,21 @@ export default function RegisterPage() {
               id="password"
               name="password"
               type="password"
-              autoComplete="new-password"
-              required
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="confirm-password"
-              className="block text-sm font-medium text-gray-700 text-right"
-            >
-              تکرار رمز عبور
-            </label>
-            <Input
-              id="confirm-password"
-              name="confirm-password"
-              type="password"
-              autoComplete="new-password"
+              autoComplete="current-password"
               required
               className="mt-1"
             />
           </div>
           <div>
             <Button type="submit" className="w-full" size="lg">
-              ثبت نام
+              ورود
             </Button>
           </div>
         </form>
         <p className="text-center text-sm text-gray-600">
-          قبلا ثبت نام کرده‌اید؟{" "}
-          <Link href="/(auth)/login" className="font-medium text-primary hover:underline">
-            وارد شوید
+          حساب کاربری ندارید؟{" "}
+          <Link href="/(auth)/register" className="font-medium text-primary hover:underline">
+            ثبت نام کنید
           </Link>
         </p>
       </div>
