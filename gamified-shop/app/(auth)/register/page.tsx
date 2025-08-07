@@ -1,8 +1,62 @@
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("رمزهای عبور مطابقت ندارند.");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      if (res.ok) {
+        // On successful registration, redirect to login page
+        router.push("/(auth)/login");
+      } else {
+        const data = await res.json();
+        setError(data.message || "خطایی در ثبت نام رخ داد.");
+      }
+    } catch (err) {
+      setError("خطای شبکه. لطفا دوباره تلاش کنید.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
@@ -14,7 +68,8 @@ export default function RegisterPage() {
             به فروشگاه ما بپیوندید و از مزایای گیمیفیکیشن لذت ببرید!
           </p>
         </div>
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
           <div>
             <label
               htmlFor="name"
@@ -29,6 +84,8 @@ export default function RegisterPage() {
               required
               className="mt-1"
               placeholder="نام خود را وارد کنید"
+              value={formData.name}
+              onChange={handleChange}
             />
           </div>
           <div>
@@ -46,6 +103,8 @@ export default function RegisterPage() {
               required
               className="mt-1"
               placeholder="you@example.com"
+              value={formData.email}
+              onChange={handleChange}
             />
           </div>
           <div>
@@ -62,27 +121,31 @@ export default function RegisterPage() {
               autoComplete="new-password"
               required
               className="mt-1"
+              value={formData.password}
+              onChange={handleChange}
             />
           </div>
           <div>
             <label
-              htmlFor="confirm-password"
+              htmlFor="confirmPassword"
               className="block text-sm font-medium text-gray-700 text-right"
             >
               تکرار رمز عبور
             </label>
             <Input
-              id="confirm-password"
-              name="confirm-password"
+              id="confirmPassword"
+              name="confirmPassword"
               type="password"
               autoComplete="new-password"
               required
               className="mt-1"
+              value={formData.confirmPassword}
+              onChange={handleChange}
             />
           </div>
           <div>
-            <Button type="submit" className="w-full" size="lg">
-              ثبت نام
+            <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+              {isLoading ? "در حال ثبت نام..." : "ثبت نام"}
             </Button>
           </div>
         </form>
