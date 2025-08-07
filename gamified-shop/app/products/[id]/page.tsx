@@ -1,15 +1,27 @@
+"use client";
+
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { mockProducts } from "@/lib/mock-data";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { useCart } from "@/context/CartContext";
+import { useState } from "react";
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
+  const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
   const product = mockProducts.find((p) => p.id === parseInt(params.id, 10));
 
   if (!product) {
     notFound();
   }
+
+  const handleAddToCart = () => {
+    addToCart(product, quantity);
+    // Optional: Add a toast notification or some user feedback here
+    console.log(`${quantity} of ${product.productName} added to cart`);
+  };
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -44,12 +56,13 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             <div className="flex items-center gap-4">
               <Input
                 type="number"
-                defaultValue="1"
+                value={quantity}
+                onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
                 min="1"
                 className="w-24 text-center"
                 aria-label="تعداد"
               />
-              <Button size="lg" className="flex-1">
+              <Button size="lg" className="flex-1" onClick={handleAddToCart}>
                 افزودن به سبد خرید
               </Button>
             </div>

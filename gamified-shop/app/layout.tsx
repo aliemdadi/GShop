@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 };
 
 import { Navbar } from "@/components/shared/Navbar";
+import { CartProvider } from "@/context/CartContext";
 
 export default function RootLayout({
   children,
@@ -22,10 +23,12 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body className={`${vazir.className} bg-background text-foreground`}>
-        <div className="relative flex min-h-screen flex-col">
-          <Navbar />
-          <main className="flex-1">{children}</main>
-        </div>
+        <CartProvider>
+          <div className="relative flex min-h-screen flex-col">
+            <Navbar />
+            <main className="flex-1">{children}</main>
+          </div>
+        </CartProvider>
       </body>
     </html>
   );

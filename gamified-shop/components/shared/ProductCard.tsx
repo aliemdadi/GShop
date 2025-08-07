@@ -1,24 +1,25 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { useCart } from "@/context/CartContext";
+import { mockProducts, Product } from "@/lib/mock-data";
 
 interface ProductCardProps {
-  id: number;
-  productName: string;
-  price: number;
-  imageUrl: string;
-  points: number;
-  stock?: number;
+  product: Product;
 }
 
-export function ProductCard({
-  id,
-  productName,
-  price,
-  imageUrl,
-  points,
-  stock,
-}: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
+  const { addToCart } = useCart();
+  const { id, productName, price, imageUrl, points, stock } = product;
+
+  const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    addToCart(product);
+    console.log(`Added product ${id} to cart`);
+  };
+
   return (
     <Link href={`/products/${id}`} className="block">
       <div className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-white border border-gray-200 transition-transform transform hover:-translate-y-1 hover:shadow-2xl h-full flex flex-col">
@@ -48,15 +49,7 @@ export function ProductCard({
           )}
         </div>
         <div className="px-6 pt-4 pb-5">
-          <Button
-            onClick={(e) => {
-              e.preventDefault(); // Prevent navigation when clicking the button
-              // Add to cart logic will go here
-              console.log(`Added product ${id} to cart`);
-            }}
-            className="w-full"
-            variant="primary"
-          >
+          <Button onClick={handleAddToCart} className="w-full" variant="primary">
             افزودن به سبد خرید
           </Button>
         </div>
