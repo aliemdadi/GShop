@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -32,8 +34,9 @@ export default function LoginPage() {
       });
 
       if (res.ok) {
-        // On successful login, redirect to the homepage
-        router.push("/");
+        const data = await res.json();
+        login(data.user); // Set the user in the context
+        router.push("/dashboard"); // Redirect to dashboard on successful login
       } else {
         const data = await res.json();
         setError(data.message || "ایمیل یا رمز عبور نامعتبر است.");
