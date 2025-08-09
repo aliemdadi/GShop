@@ -62,9 +62,11 @@ export default function CartPage() {
                 <span>مبلغ قابل پرداخت</span>
                 <span>{subtotal.toLocaleString("fa-IR")} تومان</span>
               </div>
-              <Button size="lg" className="w-full mt-6">
-                ادامه جهت تسویه حساب
-              </Button>
+              <Link href="/checkout">
+                <Button size="lg" className="w-full mt-6">
+                  ادامه جهت تسویه حساب
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
